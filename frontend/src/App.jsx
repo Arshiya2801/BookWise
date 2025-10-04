@@ -1,26 +1,27 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Signup from "./pages/Signup";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
-import BookList from "./pages/BookList";
+import Register from "./pages/Register";
+import AddBook from "./pages/AddBook";
 import BookDetails from "./pages/BookDetails";
-import AddEditBook from "./pages/AddEditBook";
+import { AuthProvider } from "./context/AuthContext";
 
-function App() {
+const App = () => {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <div className="p-5">
+    <AuthProvider>
+      <Router>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<BookList />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/books/:id" element={<BookDetails />} />
-          <Route path="/add-book" element={<AddEditBook />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/add" element={<AddBook />} />
+          <Route path="/book/:id" element={<BookDetails />} />
         </Routes>
-      </div>
-    </BrowserRouter>
+      </Router>
+    </AuthProvider>
   );
-}
+};
 
 export default App;
