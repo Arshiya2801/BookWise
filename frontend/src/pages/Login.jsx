@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import API from "../utils/api";
+import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -8,36 +8,34 @@ const Login = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await API.post("/auth/login", form);
-      login(data.user, data.token);
+      const res = await axios.post("http://localhost:5000/api/auth/login", form);
+      login(res.data);
       navigate("/");
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+    } catch {
+      alert("Invalid credentials");
     }
   };
 
   return (
-    <div className="flex justify-center mt-20">
-      <form className="w-96 p-6 border rounded shadow bg-white" onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+    <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
+      <h2 className="text-xl font-bold mb-4">Login</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          name="email"
+          type="email"
           placeholder="Email"
-          onChange={handleChange}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full border p-2"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
         <input
           type="password"
-          name="password"
           placeholder="Password"
-          onChange={handleChange}
-          className="w-full p-2 mb-3 border rounded"
+          className="w-full border p-2"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
         <button className="bg-blue-600 text-white w-full py-2 rounded">
           Login
